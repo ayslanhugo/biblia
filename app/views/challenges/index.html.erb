@@ -1,0 +1,27 @@
+<%# app/views/challenges/index.html.erb - Versão com Modo Noturno %>
+
+<%# 1. Fundo principal da página com cor para modo escuro %>
+<div class="bg-gray-50 dark:bg-gray-900 py-10 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4">
+    <%# 2. Título da página com cor para modo escuro %>
+    <h1 class="text-4xl font-serif text-center mb-12 text-gray-800 dark:text-gray-100">Desafios</h1>
+    
+    <div class="space-y-6">
+      <%# Garantimos que @challenges existe para evitar erros %>
+      <% (@challenges || []).each do |challenge| %>
+        <%# 3. Card do desafio com todos os estilos de modo noturno aplicados %>
+        <%= link_to challenge_path(challenge), class: "block p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-2xl dark:shadow-gray-700/50 transition-shadow" do %>
+          <div class="flex justify-between items-start">
+            <div>
+              <%# Título e descrição do desafio com cores para modo escuro %>
+              <h2 class="text-2xl font-bold text-blue-700 dark:text-blue-500"><%= challenge.title %></h2>
+              <p class="text-gray-600 dark:text-gray-400 mt-2"><%= challenge.description %></p>
+            </div>
+            <%# Badge da categoria com cores para modo escuro %>
+            <span class="ml-4 flex-shrink-0 px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-semibold rounded-full"><%= challenge.category %></span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

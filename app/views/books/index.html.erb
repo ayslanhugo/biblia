@@ -1,0 +1,42 @@
+<%# app/views/books/index.html.erb - Versão com Modo Noturno %>
+
+<%# 1. Fundo principal com cor para modo escuro %>
+<div class="bg-gray-100 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <header class="text-center mb-16">
+      <%# 2. Títulos do cabeçalho com cores para modo escuro %>
+      <h1 class="text-5xl font-serif font-bold text-gray-800 dark:text-gray-100">Bíblia Sagrada</h1>
+      <p class="text-lg text-gray-500 dark:text-gray-400 mt-2">Edição Ave Maria</p>
+    </header>
+
+    <%# --- ANTIGO TESTAMENTO --- %>
+    <section id="antigo-testamento" class="mb-16">
+      <%# 3. Título da seção e borda com cores para modo escuro %>
+      <h2 class="text-3xl font-serif border-b-2 border-gray-300 dark:border-gray-700 pb-2 mb-8 text-gray-800 dark:text-gray-200">Antigo Testamento</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <% @old_testament_books.each do |book| %>
+          <%# 4. Links dos livros com cores e efeitos para modo escuro %>
+          <%= link_to book_path(book), class: "group text-center p-3 rounded-lg hover:bg-white dark:hover:bg-gray-800 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition-all" do %>
+            <span class="text-lg font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"><%= book.name %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+
+    <%# --- NOVO TESTAMENTO --- %>
+    <section id="novo-testamento">
+      <%# 5. Título da seção e borda com cores para modo escuro %>
+      <h2 class="text-3xl font-serif border-b-2 border-gray-300 dark:border-gray-700 pb-2 mb-8 text-gray-800 dark:text-gray-200">Novo Testamento</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <% @new_testament_books.each do |book| %>
+          <%# 6. Links dos livros com cores e efeitos para modo escuro (mesmas classes da seção anterior) %>
+          <%= link_to book_path(book), class: "group text-center p-3 rounded-lg hover:bg-white dark:hover:bg-gray-800 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 transition-all" do %>
+            <span class="text-lg font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400"><%= book.name %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+
+  </div>
+</div>

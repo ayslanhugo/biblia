@@ -1,0 +1,123 @@
+<%# app/views/devise/registrations/edit.html.erb - Versão Final e Corrigida %>
+
+<div class="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 font-serif">
+        Editar Perfil
+      </h2>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, data: { turbo: false }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="space-y-6">
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700" %><br />
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="p-2 bg-yellow-100 text-yellow-800 rounded-md text-sm">Aguardando confirmação para: <%= resource.unconfirmed_email %></div>
+        <% end %>
+
+        <div>
+          <%= f.label :password, "Nova Senha", class: "block text-sm font-medium text-gray-700" %>
+          <i class="text-xs text-gray-500">(deixe em branco se não quiser alterar)</i>
+          <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
+            <%= f.password_field :password, autocomplete: "new-password", class: "block w-full px-3 py-2 border border-gray-300 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+              <svg data-password-visibility-target="iconHide" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+              <svg data-password-visibility-target="iconShow" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
+            </button>
+          </div>
+          <% if @minimum_password_length %>
+            <em class="text-xs text-gray-500"><%= @minimum_password_length %> caracteres no mínimo.</em>
+          <% end %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Confirmar Nova Senha" %><br />
+          <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full px-3 py-2 border border-gray-300 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+              <svg data-password-visibility-target="iconHide" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+              <svg data-password-visibility-target="iconShow" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :current_password, "Senha Atual" %> <i class="text-xs text-gray-500">(necessária para confirmar)</i><br />
+          <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
+            <%= f.password_field :current_password, autocomplete: "current-password", class: "block w-full px-3 py-2 border border-gray-300 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+              <svg data-password-visibility-target="iconHide" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+              <svg data-password-visibility-target="iconShow" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <%= f.submit "Atualizar", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700" %>
+      </div>
+    <% end %>
+
+   <%# --- INÍCIO DA SECÇÃO DE CANCELAMENTO (COM MODAL) --- %>
+<%# x-data inicializa o nosso "componente" Alpine.js. %>
+<div class="border-t border-gray-200 mt-8 pt-6" x-data="{ modalOpen: false }">
+  <h3 class="text-lg font-medium text-gray-900">Cancelar minha conta</h3>
+  <p class="mt-2 text-sm text-gray-600">
+    Insatisfeito? Esta ação é permanente e irá apagar todos os seus dados.
+  </p>
+  <div class="mt-4">
+    <%# Este botão agora apenas abre o modal %>
+    <button @click.prevent="modalOpen = true" type="button" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer">
+      Cancelar minha conta
+    </button>
+  </div>
+
+  <div x-show="modalOpen" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="display: none;">
+    
+    <%# Fundo escuro semi-transparente %>
+    <div @click="modalOpen = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+    
+    <%# O cartão do modal %>
+    <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl">
+      <div class="text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+          <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        <h3 class="mt-5 text-2xl font-semibold text-gray-900">Apagar Conta</h3>
+        <p class="mt-2 text-gray-600">
+          Tem a certeza absoluta que quer apagar a sua conta? Todos os seus dados, incluindo anotações e favoritos, serão removidos permanentemente.
+        </p>
+      </div>
+      
+      <div class="mt-6 flex justify-center space-x-4">
+        <%# Botão para fechar o modal %>
+        <button @click="modalOpen = false" type="button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+          Não, quero ficar
+        </button>
+        
+        <%# Botão VERMELHO que executa a ação de apagar %>
+        <%= button_to "Sim, Apagar a Conta", 
+                      registration_path(resource_name), 
+                      method: :delete,
+                      class: "px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

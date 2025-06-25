@@ -1,0 +1,108 @@
+<%# app/views/layouts/_header.html.erb - Versão com Botão de Modo Noturno %>
+
+<%# 1. Adicionadas classes de modo escuro e transição ao cabeçalho %>
+<nav class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-sm dark:shadow-gray-700 sticky top-0 z-50 transition-colors duration-300" x-data="{ mobileMenuOpen: false }">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <div class="flex-shrink-0">
+        <%= link_to root_path, class: "flex items-center space-x-2" do %>
+          <svg class="h-8 w-8 text-blue-600 dark:text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span class="text-xl font-bold text-gray-800 dark:text-gray-100">Bíblia Sagrada</span>
+        <% end %>
+      </div>
+
+      <div class="hidden md:flex md:items-center md:space-x-6">
+        <% bible_context_controllers = ['books', 'chapters', 'search', 'notes', 'favorite_verses'] %>
+
+        <%# 2. Adicionadas classes de modo escuro para os links de navegação %>
+        <% bible_classes = bible_context_controllers.include?(controller_name) ? 'border-blue-500 text-gray-900 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-white' %>
+        <% liturgy_classes = current_page?(liturgia_path) ? 'border-blue-500 text-gray-900 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-white' %>
+        <% challenges_classes = controller_name == 'challenges' ? 'border-blue-500 text-gray-900 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-white' %>
+
+        <%= link_to "Bíblia", root_path, class: "inline-flex items-center px-1 pt-1 border-b-2 font-medium #{bible_classes}" %>
+        <%= link_to "Liturgia Diária", liturgia_path, class: "inline-flex items-center px-1 pt-1 border-b-2 font-medium #{liturgy_classes}" %>
+        <%= link_to "Desafios", challenges_path, class: "inline-flex items-center px-1 pt-1 border-b-2 font-medium #{challenges_classes}" %>
+      </div>
+
+      <div class="hidden md:flex items-center ml-auto space-x-4 text-sm">
+        <% if bible_context_controllers.include?(controller_name) %>
+          <div class="search-bar">
+            <%= form_with(url: busca_path, method: :get, class: "flex") do |form| %>
+              <%= form.text_field :query, placeholder: "Buscar...", value: params[:query], class: "p-1 border rounded-l-md text-sm w-32 focus:w-48 transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+              <%= form.submit "🔎", class: "p-1 border-l-0 border bg-gray-100 rounded-r-md cursor-pointer hover:bg-gray-200 dark:bg-gray-600 dark:border-gray-600 dark:hover:bg-gray-500" %>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <div class="user-session-links flex items-center space-x-4">
+          <%# 3. BOTÃO DE MODO NOTURNO (DESKTOP) ADICIONADO AQUI %>
+          <button @click="toggleTheme" type="button" class="p-2 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none">
+            <span class="sr-only">Alternar modo claro/escuro</span>
+            <svg x-show="!isDarkMode" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+            <svg x-show="isDarkMode" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+          </button>
+          
+          <% if user_signed_in? %>
+            <% if current_user&.admin? %>
+              <%= link_to "Admin", admin_root_path, class: "text-red-600 font-bold hover:text-red-700 dark:text-red-500 dark:hover:text-red-400" %>
+            <% end %>
+            <%= link_to "Favoritos", my_favorites_path, class: "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" %>
+            <%= link_to "Meu Perfil", user_profile_path, class: "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" %>
+            <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" %>
+          <% else %>
+            <%= link_to "Entrar", new_user_session_path, class: "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" %>
+            <%= link_to "Registar", new_user_registration_path, class: "ml-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="md:hidden flex items-center">
+        <%# 4. BOTÃO DE MODO NOTURNO (MOBILE) ADICIONADO AQUI TAMBÉM %>
+        <button @click="toggleTheme" type="button" class="p-2 rounded-full text-gray-400 hover:bg-gray-100 focus:outline-none">
+            <span class="sr-only">Alternar modo claro/escuro</span>
+            <svg x-show="!isDarkMode" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+            <svg x-show="isDarkMode" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+        </button>
+
+        <button @click="mobileMenuOpen = !mobileMenuOpen" class="ml-2 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+          <svg x-show="!mobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+          <svg x-show="mobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden">
+    <div class="pt-2 pb-3 space-y-1">
+      <%= link_to "Bíblia", root_path, class: "block pl-3 pr-4 py-2 border-l-4 text-base font-medium #{bible_classes}" %>
+      <%= link_to "Liturgia Diária", liturgia_path, class: "block pl-3 pr-4 py-2 border-l-4 text-base font-medium #{liturgy_classes}" %>
+      <%= link_to "Desafios", challenges_path, class: "block pl-3 pr-4 py-2 border-l-4 text-base font-medium #{challenges_classes}" %>
+    </div>
+    <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+      <% if bible_context_controllers.include?(controller_name) %>
+        <div class="px-4 mb-3">
+           <%= form_with(url: busca_path, method: :get, class: "flex") do |form| %>
+             <%= form.text_field :query, placeholder: "Buscar na Bíblia...", value: params[:query], class: "w-full p-2 border rounded-md text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+             <%= form.submit "Buscar", class: "ml-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md dark:bg-gray-600 dark:text-gray-200" %>
+           <% end %>
+        </div>
+      <% end %>
+      <div class="mt-3 space-y-1">
+         <% if user_signed_in? %>
+           <% if current_user&.admin? %>
+             <%= link_to "Painel Admin", admin_root_path, class: "block px-4 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-red-500 dark:hover:text-red-400" %>
+           <% end %>
+           <%= link_to "Meus Favoritos", my_favorites_path, class: "block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700" %>
+           <%= link_to 'Meu Perfil', user_profile_path, class: "block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700" %>
+           <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "w-full text-left block px-4 py-2 text-base font-medium text-red-500 hover:text-red-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-red-400" %>
+         <% else %>
+           <%= link_to "Entrar", new_user_session_path, class: "block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700" %>
+           <%= link_to "Registar", new_user_registration_path, class: "block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700" %>
+         <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,47 @@
+<%# app/views/search/index.html.erb - Versão com Design Melhorado %>
+
+<div class="bg-gray-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <header class="mb-10 text-center">
+      <h1 class="text-4xl font-serif font-bold text-gray-800">Resultados da Busca</h1>
+      <% if @query.present? %>
+        <p class="text-lg text-gray-600 mt-2">
+          Exibindo resultados para: <strong class="text-blue-600">"<%= @query %>"</strong>
+        </p>
+      <% end %>
+    </header>
+
+    <%# --- CONTAINER DOS RESULTADOS --- %>
+    <div class="space-y-6">
+      <% if @verses.any? %>
+        <% @verses.each do |verse| %>
+          <%# Cada resultado é um "cartão" branco e com sombra %>
+          <div class="result-item bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <p class="text-lg font-semibold text-blue-700 hover:underline mb-2">
+              <%# O link aponta para o capítulo e para a "âncora" do versículo específico %>
+              <%= link_to verse.formatted_reference, chapter_path(verse.chapter, anchor: "verse-#{verse.id}") %>
+            </p>
+            <blockquote class="text-lg text-gray-700 font-serif leading-relaxed pl-4 border-l-4 border-gray-200">
+              <%# O helper 'highlight' do Rails vai destacar a palavra pesquisada no texto %>
+              <%= highlight(verse.text, @query) %>
+            </blockquote>
+          </div>
+        <% end %>
+
+        <%# Mensagem se houver muitos resultados %>
+        <% if @verses.count >= 100 %>
+          <div class="text-center mt-8 p-4 bg-blue-50 text-blue-800 rounded-md">
+            <p><i>A sua busca retornou muitos resultados. Apenas os primeiros 100 estão a ser exibidos.</i></p>
+          </div>
+        <% end %>
+        
+      <% else %>
+        <%# Mensagem amigável se não houver resultados %>
+        <div class="text-center p-10 bg-white rounded-lg shadow-sm border">
+          <p class="text-xl text-gray-700">Nenhum resultado encontrado para "<%= @query %>".</p>
+          <p class="text-gray-500 mt-2">Tente usar outras palavras ou verifique a ortografia.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

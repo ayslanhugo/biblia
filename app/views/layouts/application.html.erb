@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Minha Biblia</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    // Configuração do Tailwind (está correta)
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {}
+      }
+    }
+  </script>
+
+  <%# Carregamos o Alpine.js com 'defer' para garantir que ele espere o HTML %>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  
+  <%= javascript_importmap_tags %>
+
+  <%# Esta lógica inicial previne o "piscar" da página ao carregar o tema %>
+  <script>
+    if (localStorage.getItem('darkMode') === 'true' || 
+       (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
+
+</head>
+
+<%# O corpo da página continua com os estilos de modo escuro %>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+
+  <%# 1. A LÓGICA DO TEMA AGORA VIVE AQUI DENTRO %>
+  <div 
+    x-data="{
+      // Inicializa a variável reativa 'isDarkMode' com base no localStorage ou preferência do sistema
+      isDarkMode: localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+
+      // Função para alternar o tema
+      toggleTheme() {
+        this.isDarkMode = !this.isDarkMode;
+        localStorage.setItem('darkMode', this.isDarkMode);
+        
+        // Aplica ou remove a classe 'dark' da tag <html>
+        if (this.isDarkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    }"
+    x-cloak>
+
+    <%# O cabeçalho agora ficará DENTRO desta div para ter acesso ao 'toggleTheme' %>
+    <%= render 'layouts/header' %>
+    
+    <main>
+      <%= yield %>
+    </main>
+
+    <%= render 'layouts/footer' %>
+    
+  </div>
+</body>
+</html>

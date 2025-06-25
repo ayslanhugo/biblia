@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  challenge: one
+  day_number: 1
+  title: MyString
+  content: MyText
+
+two:
+  challenge: two
+  day_number: 1
+  title: MyString
+  content: MyText

@@ -1,0 +1,36 @@
+<div x-data="{ content: '<%= note.content.to_s.gsub(/\r\n?/, "\\n") %>', limit: 500 }">
+  <%= form_with(model: note, data: { turbo_frame: "_top" }) do |form| %>
+    <%# Bloco de erros, se houver %>
+    <% if note.errors.any? %>
+      <div class="mb-4 p-3 bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-500/30 rounded-md">
+        <h2 class="font-bold"><%= pluralize(note.errors.count, "erro") %>:</h2>
+        <ul class="list-disc list-inside mt-2">
+          <% note.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%# Área de texto %>
+    <div>
+      <%# 2. Adicionamos x-model, @input e maxlength %>
+      <%= form.text_area :content, 
+            rows: 4, 
+            class: "w-full text-base border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400",
+            maxlength: 50,
+            "x-model": "content",
+            "@input": "content = $event.target.value.slice(0, limit)" %>
+    </div>
+    
+    <%# 3. Contador de caracteres %>
+    <div class="text-right text-sm text-gray-500 dark:text-gray-400 mt-1">
+      <span x-text="content.length"></span> / <span x-text="limit"></span>
+    </div>
+
+    <%# Botão de submissão %>
+    <div class="mt-4 flex justify-end">
+      <%= form.submit "Salvar Alterações", class: "px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 cursor-pointer dark:bg-blue-700 dark:hover:bg-blue-600" %>
+    </div>
+  <% end %>
+</div>

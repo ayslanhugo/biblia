@@ -1,0 +1,106 @@
+<%# app/views/challenges/show.html.erb - Versão com Modo Noturno %>
+
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    
+    <%# Cabeçalho do Desafio %>
+    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase"><%= @challenge.category %></span>
+    <h1 class="text-3xl font-bold font-serif mb-2 text-gray-800 dark:text-gray-100"><%= @challenge.title %></h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-8"><%= @challenge.description %></p>
+
+    <%# --- BARRA DE PROGRESSO --- %>
+    <% if @user_challenge %>
+      <div class="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700">
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-2">Seu Progresso:</h3>
+        <div class="flex items-center gap-x-3">
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div class="bg-green-500 h-2.5 rounded-full" style="width: <%= @progress_percentage %>%"></div>
+          </div>
+          <span class="font-bold text-green-600 dark:text-green-400 text-lg"><%= @progress_percentage %>%</span>
+        </div>
+      </div>
+    <% end %>
+
+    <%# --- BLOCO DE INTERAÇÃO (COM MODAL) --- %>
+    <div class="mb-8" x-data="{ modalOpen: false }">
+      <% if user_signed_in? %>
+        <% user_challenge = current_user.user_challenges.find_by(challenge: @challenge) %>
+        
+        <% if user_challenge %>
+          <div class="p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 rounded-lg text-center font-semibold">
+            <p>Você já iniciou este desafio. Continue o seu progresso!</p>
+            <div class="mt-4">
+              <button @click.prevent="modalOpen = true" type="button" class="text-sm text-red-600 dark:text-red-500 hover:underline bg-transparent border-none p-0 cursor-pointer">
+                Cancelar Inscrição
+              </button>
+            </div>
+          </div>
+
+          <%# --- MODAL --- %>
+          <div x-show="modalOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+            <div @click="modalOpen = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+            <div class="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+              <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Cancelar Inscrição</h3>
+              <p class="mt-2 text-gray-600 dark:text-gray-300">
+                Tem a certeza que quer cancelar a sua inscrição no desafio "<%= @challenge.title %>"? Todo o seu progresso neste desafio será apagado permanentemente.
+              </p>
+              <div class="mt-6 flex justify-end space-x-4">
+                <button @click="modalOpen = false" type="button" class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500">
+                  Manter Inscrição
+                </button>
+                <%= button_to "Sim, Cancelar", 
+                              challenge_user_challenge_path(@challenge, user_challenge), 
+                              method: :delete, 
+                              class: "px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700" %>
+              </div>
+            </div>
+          </div>
+
+        <% else %>
+          <%= button_to "Iniciar este Desafio", challenge_user_challenges_path(@challenge), method: :post, class: "w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer text-lg" %>
+        <% end %>
+      <% else %>
+        <div class="p-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 rounded-lg text-center">
+          <%= link_to "Entre", new_user_session_path, class: "font-bold underline hover:text-blue-500" %> ou <%= link_to "registe-se", new_user_registration_path, class: "font-bold underline hover:text-blue-500" %> para iniciar este desafio.
+        </div>
+      <% end %>
+    </div>
+
+    <%# --- LISTA DE DIAS DO DESAFIO --- %>
+    <div class="space-y-4">
+      <% if user_challenge %>
+        <% @challenge_days.each do |day| %>
+          <% progress_record = user_challenge.user_challenge_days.find_by(challenge_day_id: day.id) %>
+          <div class="p-4 bg-white dark:bg-gray-800 rounded-md border dark:border-gray-700 flex items-center space-x-4 <%= 'opacity-50 bg-gray-50 dark:bg-gray-800/50' if progress_record %>">
+            <div class="checkbox-container">
+              <% if progress_record %>
+                <%= form_with(model: progress_record, url: user_challenge_day_path(progress_record), method: :delete) do |form| %>
+                  <%= form.check_box :completed, { checked: true, 'data-controller': 'autosubmit', 'data-action': 'autosubmit#submit' }, 'false', 'true' %>
+                <% end %>
+              <% else %>
+                <%= form_with(url: user_challenge_days_path, method: :post) do |form| %>
+                  <%= form.hidden_field :user_challenge_id, value: user_challenge.id %>
+                  <%= form.hidden_field :challenge_day_id, value: day.id %>
+                  <%= form.check_box :completed, { 'data-controller': 'autosubmit', 'data-action': 'autosubmit#submit' } %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-700 dark:text-gray-300">Dia <%= day.day_number %>: <%= day.title %></h3>
+              <p class="text-gray-600 dark:text-gray-400 mt-1"><%= day.content %></p>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <% @challenge_days.each do |day| %>
+          <div class="p-4 bg-white dark:bg-gray-800 rounded-md border dark:border-gray-700">
+            <h3 class="font-bold text-gray-700 dark:text-gray-300">Dia <%= day.day_number %>: <%= day.title %></h3>
+            <p class="text-gray-600 dark:text-gray-400 mt-1"><%= day.content %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    
+    <%= link_to "« Voltar para todos os desafios", challenges_path, class: "mt-8 inline-block text-blue-600 dark:text-blue-400 hover:underline" %>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+module FavoriteVersesHelper
+end

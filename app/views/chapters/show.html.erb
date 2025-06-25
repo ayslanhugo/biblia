@@ -1,0 +1,128 @@
+<%# app/views/chapters/show.html.erb - Versão com Ícones de Favoritar Corrigidos %>
+
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 py-10" 
+       x-data="{ noteToDeleteUrl: '', isNoteModalOpen: false, editNoteUrl: '', isEditModalOpen: false }"
+       @close-modals.window="isEditModalOpen = false; isNoteModalOpen = false">
+    
+    <div id="modal_closer"></div>
+
+    <header class="flex justify-between items-center mb-6">
+      <div class="w-1/4 text-left">
+        <% if @previous_chapter %>
+          <%= link_to "« Cap. #{@previous_chapter.number}", chapter_path(@previous_chapter), class: "text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400" %>
+        <% end %>
+      </div>
+      <div class="w-1/2 text-center">
+        <h1 class="text-4xl font-serif text-gray-800 dark:text-gray-100"><%= @book.name %> <%= @chapter.number %></h1>
+        <%= link_to "Voltar para #{@book.name}", book_path(@book), class: "text-sm text-gray-500 dark:text-gray-400 hover:underline" %>
+      </div>
+      <div class="w-1/4 text-right">
+        <% if @next_chapter %>
+          <%= link_to "Cap. #{@next_chapter.number} »", chapter_path(@next_chapter), class: "text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400" %>
+        <% end %>
+      </div>
+    </header>
+
+    <hr class="mb-10 border-gray-200 dark:border-gray-700">
+
+    <div class="space-y-8">
+      <% @verses.each do |verse| %>
+        <div class="flex items-start space-x-3" id="verse-<%= verse.id %>">
+          
+          <div class="w-20 flex items-center justify-end pt-1 space-x-2">
+            <% if user_signed_in? %>
+              <% existing_favorite = current_user.favorite_verses.find_by(verse_id: verse.id) %>
+              <% if existing_favorite %>
+                <%# --- ÍCONE DE ESTRELA CHEIA (CORRIGIDO) --- %>
+                <%= button_to favorite_verse_path(existing_favorite), method: :delete, class: "text-amber-400 hover:text-amber-500", title: "Remover dos Favoritos" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                  </svg>
+                <% end %>
+              <% else %>
+                <%# --- ÍCONE DE ESTRELA VAZIA (CORRIGIDO) --- %>
+                <%= button_to favorite_verses_path(verse_id: verse.id), method: :post, class: "text-gray-400 dark:text-gray-500 hover:text-amber-400", title: "Adicionar aos Favoritos" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345h5.364c.54 0 .823.737.424 1.114l-4.29 3.125a.563.563 0 00-.182.635l2.125 5.111a.563.563 0 01-.806.636l-4.29-3.125a.563.563 0 00-.606 0l-4.29 3.125a.563.563 0 01-.806-.636l2.125-5.111a.563.563 0 00-.182-.635l-4.29-3.125a.563.563 0 01.424-1.114h5.364a.563.563 0 00.475-.345l2.125-5.111z" />
+                  </svg>
+                <% end %>
+              <% end %>
+            <% end %>
+            <% text_to_share = "\"#{verse.text}\" (#{verse.formatted_reference})" %>
+            <%= link_to "https://api.whatsapp.com/send?text=#{ERB::Util.url_encode(text_to_share)}", target: "_blank", class: "text-gray-400 dark:text-gray-500 hover:text-green-500", title: "Partilhar no WhatsApp" do %><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path></svg><% end %>
+          </div>
+
+          <div class="flex-1">
+            <p class="text-xl leading-relaxed text-gray-800 dark:text-gray-200 font-serif">
+              <sup class="font-sans font-bold text-blue-600 dark:text-blue-400 text-xs align-super mr-1"><%= verse.number %></sup>
+              <%= verse.text %>
+            </p>
+            <div class="note-section mt-3">
+              <% if user_signed_in? %>
+                <% note = verse.notes.find_by(user: current_user) %>
+                <% if note %>
+                  <%= render 'notes/note', note: note %>
+                <% else %>
+                                  <details class="note-adder" x-data="{ content: '', limit: 50 }">
+                    <summary class="cursor-pointer text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">Adicionar Anotação</summary>
+                    <div class="mt-2">
+                      <%= form_with(model: Note.new, url: notes_path) do |form| %>
+                        <%= form.hidden_field :verse_id, value: verse.id %>
+                        
+                        <%= form.text_area :content, 
+                              rows: 3, 
+                              placeholder: "Escreva a sua reflexão...", 
+                              class: "w-full text-base border-gray-300 rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400",
+                              maxlength: 50,
+                              "x-model": "content",
+                              "@input": "content = $event.target.value.slice(0, limit)" %>
+
+                        <div class="flex justify-between items-center mt-2">
+                          <span class="text-sm text-gray-500 dark:text-gray-400">
+                            <span x-text="content.length"></span> / <span x-text="limit"></span>
+                          </span>
+                          <%= form.submit "Salvar", class: "px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600" %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </details>
+
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Modais %>
+    <div x-show="isNoteModalOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+      <div @click="isNoteModalOpen = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Apagar Anotação</h3>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">Tem a certeza que quer apagar esta anotação permanentemente?</p>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button @click="isNoteModalOpen = false" type="button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">Cancelar</button>
+          <%= form_with(url: "", method: :delete, html: { "x-ref": "deleteForm", "data-turbo": "false" }) do |form| %>
+            <%= form.hidden_field :authenticity_token, value: form_authenticity_token %>
+            <button type="button" @click="$refs.deleteForm.action = noteToDeleteUrl; $refs.deleteForm.submit()" class="px-6 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 cursor-pointer">Sim, Apagar</button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div x-show="isEditModalOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">
+      <div @click="isEditModalOpen = false" class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+        <button @click="isEditModalOpen = false" type="button" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 z-10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <turbo-frame id="modal_content" :src="editNoteUrl">
+          <div class="p-8 text-center text-gray-500 dark:text-gray-400">A carregar editor...</div>
+        </turbo-frame>
+      </div>
+    </div>
+
+  </div>
+</div>

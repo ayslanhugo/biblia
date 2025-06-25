@@ -1,0 +1,32 @@
+<%# app/views/books/show.html.erb - Versão com Modo Noturno %>
+
+<%# 1. Fundo principal com cor para modo escuro %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <%# Cabeçalho com "Breadcrumb" para navegação %>
+    <header class="text-center mb-12">
+      <%# 2. Breadcrumb com cores para modo escuro %>
+      <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+        <%= link_to "Índice de Livros", root_path, class: "hover:underline dark:hover:text-white" %>
+        <span class="mx-2">/</span>
+        <span><%= @book.name %></span>
+      </div>
+      <%# 3. Título principal com cor para modo escuro %>
+      <h1 class="text-4xl font-serif font-bold text-gray-800 dark:text-gray-100">
+        Capítulos de <%= @book.name %>
+      </h1>
+    </header>
+
+    <%# Grelha de Capítulos %>
+    <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
+      <% @chapters.each do |chapter| %>
+        <%# 4. Botões dos capítulos com cores e efeitos para modo escuro %>
+        <%= link_to chapter_path(chapter), class: "flex items-center justify-center h-16 w-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm text-lg font-semibold text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-500 dark:hover:border-blue-500 transition-all duration-200" do %>
+          <%= chapter.number %>
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+</div>

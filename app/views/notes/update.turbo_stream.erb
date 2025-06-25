@@ -1,0 +1,8 @@
+<%# 1. Substitui a anotação na página pela versão atualizada. %>
+<%= turbo_stream.replace @note do %>
+  <%= render "notes/note", note: @note %>
+<% end %>
+
+<%= turbo_stream.update "modal_closer" do %>
+  <div x-init="$dispatch('close-modals')"></div>
+<% end %>
