@@ -7,8 +7,6 @@ class LiturgyController < ApplicationController
   def show
     date_param = params[:date]
     
-    # Usamos o cache do Rails. A chave de cache inclui a data para que cada
-    # dia seja guardado separadamente. O cache expira a cada 12 horas.
     @liturgy = Rails.cache.fetch("liturgy_#{date_param || 'today'}", expires_in: 12.hours) do
       url = build_api_url(date_param)
       
