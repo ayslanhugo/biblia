@@ -1,59 +1,21 @@
-# PostgreSQL. Versions 9.3 and up are supported.
-#
-# Install the pg driver:
-#   gem install pg
-# On macOS with Homebrew:
-#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
-# On Windows:
-#   gem install pg
-#       Choose the win32 build.
-#       Install PostgreSQL and put its /bin directory on your path.
-#
-# Configure Using Gemfile
-# gem "pg"
-#
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
 
 development:
   <<: *default
   database: biblia_development
+  # Use as suas credenciais locais aqui
+  # username: postgres
+  # password:
 
-  # Descomente e adicione o seu nome de utilizador do PostgreSQL.
-  # Se não criou um específico, o padrão é geralmente 'postgres'.
-  username: postgres
-  password: 123456
-
-  host: localhost
 test:
   <<: *default
   database: biblia_test
 
-
-  username: postgres
-  password: "123456"  
-  host: localhost
-
 production:
-  primary: &primary_production
-    <<: *default
-    database: biblia_production
-    username: biblia
-    password: <%= ENV["BIBLIA_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: biblia_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: biblia_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: biblia_production_cable
-    migrations_paths: db/cable_migrate
+  # Esta configuração força o Rails a usar APENAS o DATABASE_URL
+  # fornecido pelo Render, ignorando qualquer outra configuração.
+  <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
