@@ -1,3 +1,5 @@
+# config/database.yml - Versão Final e Definitiva para Rails 8 no Render
+
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -15,7 +17,19 @@ test:
   database: biblia_test
 
 production:
-  # Esta configuração força o Rails a usar APENAS o DATABASE_URL
-  # fornecido pelo Render, ignorando qualquer outra configuração.
-  <<: *default
-  url: <%= ENV.fetch("DATABASE_URL") %>
+  # Esta é a base de dados principal. Ela usa a URL do Render.
+  primary:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>
+
+  # As configurações abaixo dizem ao Rails para usar a mesma base de dados
+  # principal para todas as outras funcionalidades.
+  solid_cache:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>
+  solid_queue:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>
+  solid_cable:
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>
