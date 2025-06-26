@@ -2,6 +2,7 @@
 
 class LiturgyController < ApplicationController
   # Não é necessário fazer login para ver a liturgia
+  # skip_before_action :authenticate_user!, only: [:show] # Esta linha foi removida em commits anteriores
 
   def show
     date_param = params[:date]
@@ -43,10 +44,12 @@ class LiturgyController < ApplicationController
   end
 
   def log_api_error(response, url)
+    # Regista o erro nos logs do Render para podermos depurar
     Rails.logger.error "API Error: Failed to fetch liturgy from #{url}. Status: #{response.code}, Body: #{response.body}"
   end
 
   def log_network_error(error, url)
+    # Regista o erro nos logs do Render para podermos depurar
     Rails.logger.error "Network Error: Failed to connect to #{url}. Error: #{error.class} - #{error.message}"
   end
 end
