@@ -1,28 +1,50 @@
 # app/controllers/liturgy_controller.rb
+
 class LiturgyController < ApplicationController
-  # Renomeamos a ação para 'show'
+  # Cache para guardar os resultados da API e evitar chamadas repetidas
+  # O cache expira a cada 12 horas.
+  caches_action :show, expires_in: 12.hours, cache_path: -> { request.original_url }
+
   def show
-  if params[:date].present?
+    date_param = params[:date]
+    url = build_api_url(date_param)
+    
     begin
-      # Primeiro, tentamos converter a string de data (ex: "2025-06-21") num objeto de Data
-      selected_date = Date.parse(params[:date])
+      # Tenta fazer a chamada à API
+      response = HTTParty.get(url, timeout: 10) # Adicionado timeout de 10 segundos
 
-      # Depois, passamos os 3 argumentos corretos para o nosso serviço
-      @liturgy = LiturgyApiService.fetch_for_date(selected_date.day, selected_date.month, selected_date.year)
-    rescue Date::Error
-      # Se a data for inválida (ex: "231123"), o .parse falha e este bloco é executado
-      @liturgy = LiturgyApiService.fetch_today
-      flash.now[:alert] = "Formato de data inválido. Por favor, use o calendário."
+      if response.success?
+        @liturgy = response.parsed_response
+      else
+        # Se a resposta não for 2xx, regista o erro e prepara uma mensagem
+        log_api_error(response, url)
+        flash.now[:alert] = "Não foi possível obter a liturgia. O serviço pode estar temporariamente indisponível."
+        @liturgy = nil
+      end
+
+    rescue Net::ReadTimeout, Net::OpenTimeout, SocketError, HTTParty::Error => e
+      # Se ocorrer um erro de rede (timeout, etc.), apanha a excepção,
+      # regista o erro e prepara uma mensagem
+      log_network_error(e, url)
+      flash.now[:alert] = "Ocorreu um erro de comunicação ao buscar a liturgia. Por favor, tente novamente mais tarde."
+      @liturgy = nil
     end
-  else
-    # Se nenhuma data for fornecida, busca a de hoje
-    @liturgy = LiturgyApiService.fetch_today
   end
 
-  # Lógica de erro para a resposta da API
-  if @liturgy.nil? || @liturgy.key?("erro")
-    flash.now[:alert] = @liturgy ? @liturgy["erro"] : "Não foi possível carregar a liturgia."
-    @liturgy = nil
+  private
+
+  # Método para construir o URL da API
+  def build_api_url(date)
+    base_url = "https://liturgia.up.railway.app"
+    date.present? ? "#{base_url}/#{date}" : base_url
   end
-end
+
+  # Métodos para registar os erros nos logs do Render
+  def log_api_error(response, url)
+    Rails.logger.error "API Error: Failed to fetch liturgy from #{url}. Status: #{response.code}, Body: #{response.body}"
+  end
+
+  def log_network_error(error, url)
+    Rails.logger.error "Network Error: Failed to connect to #{url}. Error: #{error.class} - #{error.message}"
+  end
 end
