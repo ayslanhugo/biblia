@@ -30,11 +30,6 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
   
-  # Diz a cada componente para usar a sua base de dados nomeada do database.yml
-  config.solid_cache.connects_to = { database: { writing: :cache, reading: :cache } }
-  config.solid_queue.connects_to = { database: { writing: :queue, reading: :queue } }
-  config.solid_cable.connects_to = { database: { writing: :cable, reading: :cable } }
-
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 

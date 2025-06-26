@@ -1,3 +1,4 @@
+# config/database.yml
 
 default: &default
   adapter: postgresql
@@ -23,15 +24,5 @@ production:
   # não existir no ambiente de desenvolvimento, mas funciona perfeitamente
   # em produção, onde a variável DATABASE_URL é fornecida pelo Render.
   primary:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-
-  cache:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-  queue:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-  cable:
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
