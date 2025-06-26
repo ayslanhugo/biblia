@@ -2,7 +2,6 @@
 
 class LiturgyController < ApplicationController
   # Não é necessário fazer login para ver a liturgia
-  skip_before_action :authenticate_user!, only: [:show]
 
   def show
     date_param = params[:date]
