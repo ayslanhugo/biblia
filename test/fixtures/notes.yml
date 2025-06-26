@@ -1,11 +1,4 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  content: MyText
+  content: "Esta é uma anotação de teste."
   user: one
-  verse: one
-
-two:
-  content: MyText
-  user: two
-  verse: two
+  verse: genesis_1_1

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <title>Minha Biblia</title>
+  <title><%= content_for?(:title) ? yield(:title) : "Bíblia Online" %></title>
+  <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : 'Estude a Bíblia Sagrada, acompanhe a liturgia diária e participe de desafios de leitura.' %>">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
@@ -40,7 +41,9 @@
   <style>
     [x-cloak] { display: none !important; }
   </style>
-
+  <% if Rails.env.production? %>
+    <%= render "layouts/analytics" %>
+  <% end %>
 </head>
 
 <%# O corpo da página continua com os estilos de modo escuro %>

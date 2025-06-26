@@ -1,6 +1,8 @@
 # config/routes.rb - Versão Final, Completa e Corrigida
 
 Rails.application.routes.draw do
+  get "errors/not_found"
+  get "errors/internal_server_error"
   get "highlights/create"
   get "profiles/show"
   # 1. Rotas do Sistema de Utilizadores
@@ -24,7 +26,6 @@ Rails.application.routes.draw do
     resources :user_challenges, only: [ :create, :destroy ]
   end
 
-  # --- ESTA É A LINHA QUE ESTAVA EM FALTA ---
   # Rota para marcar/desmarcar o progresso de um dia
   resources :user_challenge_days, only: [ :create, :destroy ]
 
@@ -40,4 +41,7 @@ Rails.application.routes.draw do
 
   get "sobre", to: "static_pages#about", as: "about"
   get "contato", to: "static_pages#contact", as: "contact"
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
 end

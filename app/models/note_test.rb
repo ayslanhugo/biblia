@@ -2,29 +2,24 @@
 require "test_helper"
 
 class NoteTest < ActiveSupport::TestCase
-  # Carrega os dados de exemplo
-  fixtures :users, :verses, :chapters, :books, :versions
-
-  # --- MUDANÇA DE SINTAXE ---
-  # Usamos 'def test_...' em vez de 'test "..." do' para contornar o bug de carregamento.
-
-  def test_should_save_valid_note
+  test "should save valid note" do
+    # Usa os "fixtures" para obter um utilizador e um versículo de teste
     user = users(:one)
     verse = verses(:genesis_1_1)
 
-    note = Note.new(content: "Anotação válida.", user: user, verse: verse)
+    note = Note.new(content: "Esta é uma anotação válida.", user: user, verse: verse)
     assert note.save, "Não foi possível salvar uma anotação válida"
   end
 
-  def test_should_not_save_note_without_content
+  test "should not save note without content" do
     user = users(:one)
     verse = verses(:genesis_1_1)
 
-    note = Note.new(user: user, verse: verse)
+    note = Note.new(user: user, verse: verse) # Sem conteúdo
     assert_not note.save, "Salvou uma anotação sem conteúdo"
   end
 
-  def test_should_not_save_note_with_content_longer_than_500_characters
+  test "should not save note with content longer than 500 characters" do
     user = users(:one)
     verse = verses(:genesis_1_1)
     long_content = "a" * 501 # Cria um texto com 501 caracteres

@@ -1,11 +1,4 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  chapter: one
+genesis_1_1:
   number: 1
-  text: MyText
-
-two:
-  chapter: two
-  number: 1
-  text: MyText
+  text: "No princípio, Deus criou o céu e a terra."
+  chapter: genesis_1
