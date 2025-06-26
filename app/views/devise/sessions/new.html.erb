@@ -1,24 +1,29 @@
 <%# app/views/devise/sessions/new.html.erb %>
 
-<div class="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
-  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+<%# 1. Fundo da página com cor para modo escuro %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center py-12 px-4">
+  <%# 2. Card do formulário com cores para modo escuro %>
+  <div class="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-10 rounded-xl shadow-lg border dark:border-gray-700">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 font-serif">
+      <%# 3. Título principal com cor para modo escuro %>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100 font-serif">
         Entrar na sua conta
       </h2>
     </div>
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
       <div class="rounded-md -space-y-px">
         <div class="mb-5">
-          <%= f.label :email, class: "block text-sm font-medium text-gray-700" %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" %>
+          <%# 4. Labels com cor para modo escuro %>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %><br />
+          <%# 5. Campos de input com cores para modo escuro %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-md shadow-sm" %>
         </div>
 
         <div class="mb-5">
-          <%= f.label :password, "Senha", class: "block text-sm font-medium text-gray-700" %><br />
+          <%= f.label :password, "Senha", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %><br />
           <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
-            <%= f.password_field :password, autocomplete: "current-password", class: "block w-full px-3 py-2 border border-gray-300 rounded-md", data: { password_visibility_target: "input" } %>
-            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+            <%= f.password_field :password, autocomplete: "current-password", class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500">
               <svg data-password-visibility-target="iconShow" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
               <svg data-password-visibility-target="iconHide" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
             </button>
@@ -29,8 +34,9 @@
       <% if devise_mapping.rememberable? %>
         <div class="flex items-center justify-between mb-5">
           <div class="flex items-center">
-            <%= f.check_box :remember_me, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
-            <%= f.label :remember_me, "Lembrar-me", class: "ml-2 block text-sm text-gray-900" %>
+            <%= f.check_box :remember_me, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded" %>
+            <%# 6. Texto do "Lembrar-me" com cor para modo escuro %>
+            <%= f.label :remember_me, "Lembrar-me", class: "ml-2 block text-sm text-gray-900 dark:text-gray-300" %>
           </div>
         </div>
       <% end %>
@@ -41,6 +47,7 @@
     <% end %>
 
     <div class="text-sm text-center mt-4">
+      <%# A partial de links partilhados também precisará de ser atualizada %>
       <%= render "devise/shared/links" %>
     </div>
   </div>

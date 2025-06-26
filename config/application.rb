@@ -11,6 +11,13 @@ module Biblia
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
+    # Define o idioma padrão da aplicação.
+    config.i18n.default_locale = :'pt-BR'
+    
+    # Adiciona pt-BR à lista de idiomas disponíveis na aplicação.
+    config.i18n.available_locales = [:'pt-BR', :en]
+
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.

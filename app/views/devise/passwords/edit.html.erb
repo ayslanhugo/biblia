@@ -1,25 +1,50 @@
-<h2>Change your password</h2>
+<%# app/views/devise/passwords/edit.html.erb %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-10 rounded-xl shadow-lg border dark:border-gray-700">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100 font-serif">
+        Altere a sua senha
+      </h2>
+    </div>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, data: { turbo: false }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= f.hidden_field :reset_password_token %>
 
-  <div class="field">
-    <%= f.label :password, "New password" %><br />
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em><br />
+      <div class="space-y-6 mt-6">
+        <div>
+          <%= f.label :password, "Nova senha", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <% if @minimum_password_length %>
+            <em class="text-xs text-gray-500 dark:text-gray-400">(<%= @minimum_password_length %> caracteres no mínimo)</em>
+          <% end %>
+          <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
+            <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500">
+              <svg data-password-visibility-target="iconShow" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+              <svg data-password-visibility-target="iconHide" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Confirme a nova senha", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %><br />
+          <div class="mt-1 relative rounded-md shadow-sm" data-controller="password-visibility">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-md", data: { password_visibility_target: "input" } %>
+            <button type="button" data-action="click->password-visibility#toggle" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500">
+              <svg data-password-visibility-target="iconShow" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.522 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+              <svg data-password-visibility-target="iconHide" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2 2 0 012.828 2.828l1.515 1.515a4 4 0 00-5.857-5.857z" clip-rule="evenodd" /><path d="M9.879 16.121A9.958 9.958 0 0110 17c4.478 0 8.268-2.943 9.542-7a10.014 10.014 0 00-3.292-4.455l-1.473 1.473a8.007 8.007 0 01-4.779 4.779l-1.473 1.473zM10 12a2 2 0 112.828-2.828l-2.828 2.828z" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <%= f.submit "Alterar minha senha", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700" %>
+      </div>
     <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
-  </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <div class="text-sm text-center mt-4">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

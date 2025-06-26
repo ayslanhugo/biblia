@@ -1,0 +1,100 @@
+# config/locales/pt-BR.yml
+# Arquivo de tradução completo para Português do Brasil
+
+pt-BR:
+  # Traduções do ActiveRecord (para modelos e atributos)
+  activerecord:
+    models:
+      user:
+        one: "Usuário"
+        other: "Usuários"
+    attributes:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação de senha"
+        remember_me: "Lembrar-me"
+        current_password: "Senha atual"
+
+  # Traduções de mensagens de erro gerais do Rails
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      not_saved:
+        one: "Não foi possível salvar %{resource}: 1 erro encontrado."
+        other: "Não foi possível salvar %{resource}: %{count} erros encontrados."
+      accepted: "deve ser aceito"
+      blank: "não pode ficar em branco"
+      confirmation: "não confere com a confirmação"
+      empty: "não pode ficar vazio"
+      equal_to: "deve ser igual a %{count}"
+      even: "deve ser par"
+      exclusion: "não está disponível"
+      greater_than: "deve ser maior que %{count}"
+      greater_than_or_equal_to: "deve ser maior ou igual a %{count}"
+      inclusion: "não está incluído na lista"
+      invalid: "não é válido"
+      less_than: "deve ser menor que %{count}"
+      less_than_or_equal_to: "deve ser menor ou igual a %{count}"
+      not_found: "não encontrado(a)"
+      not_a_number: "não é um número"
+      not_an_integer: "não é um número inteiro"
+      odd: "deve ser ímpar"
+      present: "deve ficar em branco"
+      required: "é obrigatório(a)"
+      taken: "já está em uso"
+      too_long: "é muito longo (máximo de %{count} caracteres)"
+      too_short: "é muito curto (mínimo de %{count} caracteres)"
+      wrong_length: "não possui o tamanho esperado (%{count} caracteres)"
+
+  # Traduções do Devise
+  devise:
+    confirmations:
+      confirmed: "Sua conta foi confirmada com sucesso."
+      send_instructions: "Dentro de alguns minutos, você receberá um e-mail com instruções para a confirmação da sua conta."
+      send_paranoid_instructions: "Se o seu e-mail estiver cadastrado, você receberá um e-mail com instruções para a confirmação da sua conta."
+    failure:
+      already_authenticated: "Você já está logado."
+      inactive: "Sua conta ainda não foi ativada."
+      invalid: "E-mail ou senha inválidos."
+      locked: "Sua conta está bloqueada."
+      last_attempt: "Você tem mais uma tentativa antes de sua conta ser bloqueada."
+      not_found_in_database: "E-mail ou senha inválidos."
+      timeout: "Sua sessão expirou. Por favor, efetue login novamente para continuar."
+      unauthenticated: "Para continuar, efetue login ou registre-se."
+      unconfirmed: "Antes de continuar, confirme a sua conta."
+    mailer:
+      confirmation_instructions:
+        subject: "Instruções de confirmação"
+      reset_password_instructions:
+        subject: "Instruções de redefinição de senha"
+      unlock_instructions:
+        subject: "Instruções de desbloqueio"
+      password_change:
+        subject: "Senha alterada"
+    omniauth_callbacks:
+      failure: "Não foi possível autenticá-lo como %{kind} porque \"%{reason}\"."
+      success: "Autenticado com sucesso com a conta de %{kind}."
+    passwords:
+      no_token: "Você só pode acessar esta página através de um e-mail de redefinição de senha. Se já acessou por este e-mail, verifique se usou a URL completa."
+      send_instructions: "Dentro de alguns minutos, você receberá um e-mail com instruções para a redefinição da sua senha."
+      send_paranoid_instructions: "Se o seu e-mail estiver cadastrado, você receberá um e-mail com instruções para a redefinição da sua senha."
+      updated: "Sua senha foi alterada com sucesso. Você está logado."
+      updated_not_active: "Sua senha foi alterada com sucesso."
+    registrations:
+      destroyed: "Tchau! Sua conta foi cancelada com sucesso. Esperamos vê-lo novamente em breve."
+      signed_up: "Bem-vindo! Você se cadastrou com sucesso."
+      signed_up_but_inactive: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta ainda não foi ativada."
+      signed_up_but_locked: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta está bloqueada."
+      signed_up_but_unconfirmed: "Uma mensagem com um link de confirmação foi enviada para o seu e-mail. Por favor, acesse o link para ativar a sua conta."
+      update_needs_confirmation: "Você atualizou a sua conta com sucesso, mas nós precisamos verificar o seu novo e-mail. Por favor, verifique seu e-mail e clique no link de confirmação para confirmar o seu novo endereço."
+      updated: "Sua conta foi atualizada com sucesso."
+      updated_but_not_signed_in: "Sua conta foi atualizada com sucesso, mas como sua senha foi alterada, você precisa efetuar login novamente."
+    sessions:
+      signed_in: "Login efetuado com sucesso."
+      signed_out: "Saiu com sucesso."
+      already_signed_out: "Saiu com sucesso."
+    unlocks:
+      send_instructions: "Dentro de alguns minutos, você receberá um e-mail com instruções para o desbloqueio da sua conta."
+      send_paranoid_instructions: "Se sua conta existir, você receberá um e-mail com instruções para desbloqueá-la em alguns minutos."
+      unlocked: "Sua conta foi desbloqueada com sucesso. Efetue login para continuar."
