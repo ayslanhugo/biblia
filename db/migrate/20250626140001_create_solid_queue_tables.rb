@@ -20,7 +20,9 @@ class CreateSolidQueueTables < ActiveRecord::Migration[8.0]
 
       t.datetime :created_at, null: false
 
-      t.index [ :scheduled_at, :priority ], name: "index_solid_queue_scheduled_executions_on_scheduled_at_and_priority"
+      # --- CORREÇÃO AQUI ---
+      # Adicionámos um nome de índice mais curto para evitar o erro.
+      t.index [ :scheduled_at, :priority ], name: "index_solid_queue_scheduled_executions"
     end
 
     create_table :solid_queue_ready_executions do |t|
