@@ -1,22 +1,28 @@
-<%# app/views/admin/users/edit.html.erb %>
+<%# Arquivo: app/views/admin/users/edit.html.erb %>
+<%# -------------------------------------------------------------------- %>
+<div class="bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 min-h-screen">
+  <div class="max-w-2xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Editar Utilizador</h1>
+      <p class="text-lg text-gray-500 dark:text-gray-400 mt-1"><%= @user.email %></p>
+    </header>
 
-<h1 class="text-3xl font-bold text-gray-800 mb-2">Editar Utilizador</h1>
-<p class="text-lg text-gray-600 mb-8"><%= @user.email %></p>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border dark:border-gray-700">
+      <%= form_with(model: [:admin, @user], url: admin_user_path(@user), method: :patch) do |form| %>
 
-<div class="bg-white p-6 rounded-lg shadow">
-  <%= form_with(model: @user, url: admin_user_path(@user), method: :patch) do |form| %>
+        <div class="mb-6">
+          <div class="flex items-center">
+            <%= form.check_box :admin, class: "h-5 w-5 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 dark:bg-gray-900 dark:focus:ring-offset-gray-800" %>
+            <%= form.label :admin, "Tornar Administrador?", class: "ml-3 block font-medium text-gray-700 dark:text-gray-300" %>
+          </div>
+          <p class="ml-8 text-xs text-gray-500 dark:text-gray-400">Marque esta caixa para conceder permissões de administrador a este utilizador.</p>
+        </div>
 
-    <div class="mb-6">
-      <div class="flex items-center">
-        <%= form.check_box :admin, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
-        <%= form.label :admin, "Tornar Administrador?", class: "ml-3 block text-sm font-medium text-gray-700" %>
-      </div>
+        <div class="flex items-center space-x-4">
+          <%= form.submit "Atualizar Utilizador", class: "px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 cursor-pointer" %>
+          <%= link_to "Cancelar", admin_users_path, class: "text-gray-600 dark:text-gray-400 hover:underline" %>
+        </div>
+      <% end %>
     </div>
-
-    <div class="flex items-center space-x-4">
-      <%= form.submit "Atualizar Utilizador", class: "px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 cursor-pointer" %>
-      <%= link_to "Cancelar", admin_users_path, class: "text-gray-600 hover:underline" %>
-    </div>
-
-  <% end %>
+  </div>
 </div>
