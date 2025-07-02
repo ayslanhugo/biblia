@@ -1,105 +1,104 @@
-<%# app/views/liturgy/show.html.erb - Versão Corrigida Final para Dark Mode %>
-
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
   <div class="max-w-4xl mx-auto px-4 py-10">
 
-    <%# Título Principal %>
     <h1 class="text-4xl font-serif text-center text-gray-800 dark:text-gray-100 mb-8">Liturgia Diária</h1>
 
-    <%# Formulário de seleção de data %>
+    <%# Formulário de seleção de data (sem alterações) %>
     <div class="mb-10 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 text-center">
-  <%= form_with(url: liturgia_path, method: :get, local: true) do |form| %>
-    <label for="date" class="font-semibold text-gray-700 dark:text-gray-300 mr-2">Ver liturgia de outra data:</label>
-    <div class="relative inline-block">
-  <%= text_field_tag :date, params[:date],
-        class: "p-2 border rounded-md cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 pl-10",
-        data: { controller: "datepicker" },
-        autocomplete: "off" %>
-  <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-    <!-- Ícone SVG de calendário -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-      </svg>
-    </span>
-  </div>
-  <% end %>
-  </div>
-
+      <%= form_with(url: liturgia_path, method: :get) do |form| %>
+        <label for="date" class="font-semibold text-gray-700 dark:text-gray-300 mr-2">Ver liturgia de outra data:</label>
+        <div class="relative inline-block">
+          <%= text_field_tag :date, params[:date],
+                class: "p-2 border rounded-md cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 pl-10",
+                data: { controller: "datepicker" },
+                autocomplete: "off" %>
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </span>
+        </div>
+      <% end %>
+    </div>
 
     <% if @liturgy.present? %>
-
-      <%# Informações gerais %>
-      <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 mb-6">
-        <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-400 mb-2"><%= @liturgy['liturgia'] %></h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400"><%= @liturgy['data'] %></p>
-        <div class="flex items-center mt-2">
-          <p class="text-gray-700 dark:text-gray-300 mr-2"><strong>Cor Litúrgica:</strong></p>
-          <span class="h-6 w-6 rounded-full cor-<%= @liturgy['cor'].parameterize %> border border-gray-300 dark:border-gray-600" title="<%= @liturgy['cor'] %>"></span>
-          <span class="ml-2 font-semibold text-gray-800 dark:text-gray-200"><%= @liturgy['cor'] %></span>
+      <div class="space-y-6">
+        <%# Card de Informações Gerais %>
+        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700">
+          <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-400 mb-2"><%= @liturgy['liturgia'] %></h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400"><%= @liturgy['data'] %></p>
+          <div class="flex items-center mt-2">
+            <p class="text-gray-700 dark:text-gray-300 mr-2"><strong>Cor Litúrgica:</strong></p>
+            <span class="h-6 w-6 rounded-full cor-<%= @liturgy['cor'].parameterize %> border border-gray-300 dark:border-gray-600" title="<%= @liturgy['cor'] %>"></span>
+            <span class="ml-2 font-semibold text-gray-800 dark:text-gray-200"><%= @liturgy['cor'] %></span>
+          </div>
         </div>
-      </div>
 
-      <%# Montagem das leituras %>
-      <% leituras = {
-        "Primeira Leitura" => [@liturgy['primeiraLeitura']].compact,
-        "Salmo" => [@liturgy['salmo']].compact,
-        "Segunda Leitura" => @liturgy['segundaLeitura'].is_a?(Hash) ? [@liturgy['segundaLeitura']] : [],
-        "Evangelho" => [@liturgy['evangelho']].compact
-      } %>
+        <%# --- LÓGICA ATUALIZADA PARA A ESTRUTURA DA V2 --- %>
+        <%# Mapeia as chaves da API para os títulos que queremos mostrar %>
+        <%
+          secoes_leituras = {
+            "primeiraLeitura" => "Primeira Leitura",
+            "salmo" => "Salmo Responsorial",
+            "segundaLeitura" => "Segunda Leitura",
+            "evangelho" => "Evangelho",
+            "extras" => "Leituras e Ritos Adicionais"
+          }
+        %>
 
-      <% leituras.each do |tipo, leituras_array| %>
-        <% next if leituras_array.empty? %>
-        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 mb-6">
-          <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4"><%= tipo %></h2>
+        <% secoes_leituras.each do |chave_api, titulo_seccao| %>
+          <% leituras_array = @liturgy.dig('leituras', chave_api) %>
+          <% next if leituras_array.blank? %>
 
-          <% leituras_array.each_with_index do |leitura, index| %>
-            <% next if leitura.blank? || leitura == "Não há segunda leitura hoje!" %>
-            <% if leitura['titulo'] %>
-              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2"><%= leitura['titulo'] %></h3>
+          <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4"><%= titulo_seccao %></h2>
+            
+            <% leituras_array.each_with_index do |leitura, index| %>
+              <div class="<%= 'mt-8 border-t pt-8 border-gray-200 dark:border-gray-700' if index > 0 %>">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2"><%= leitura['titulo'] %> <%= "(Opção #{index + 1})" if leituras_array.size > 1 %></h3>
+                <p class="text-sm italic text-gray-500 dark:text-gray-400 mb-2"><%= leitura['referencia'] %></p>
+                <% if leitura['refrao'] %>
+                  <p class="font-serif italic text-gray-600 dark:text-gray-300 mb-4">R. <%= leitura['refrao'] %></p>
+                <% end %>
+                <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                  <%= simple_format(leitura['texto']) %>
+                </div>
+              </div>
             <% end %>
-            <% if leitura['referencia'] %>
-              <p class="text-sm italic text-gray-500 dark:text-gray-400 mb-2"><%= leitura['referencia'] %></p>
-            <% end %>
-            <% if leitura['refrao'] %>
-              <p class="font-serif italic text-gray-600 dark:text-gray-300 mb-4">R. <%= leitura['refrao'] %></p>
-            <% end %>
-            <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed">
-              <%= simple_format(leitura['texto']) %>
+          </div>
+        <% end %>
+
+        <%# Orações %>
+        <% if @liturgy['oracoes'] %>
+          <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 space-y-6">
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Orações</h3>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">Coleta</h4>
+              <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy.dig('oracoes', 'coleta')) %></div>
             </div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%# Orações %>
-      <% if @liturgy['oracoes'] %>
-        <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 space-y-6">
-          <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Orações</h3>
-
-          <div>
-            <h4 class="font-bold text-gray-800 dark:text-gray-200">Oração da Coleta</h4>
-            <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy['oracoes']['coleta']) %></div>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">Sobre as Oferendas</h4>
+              <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy.dig('oracoes', 'oferendas')) %></div>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">Depois da Comunhão</h4>
+              <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy.dig('oracoes', 'comunhao')) %></div>
+            </div>
+            
+            <%# Orações Extras %>
+            <% @liturgy.dig('oracoes', 'extras')&.each do |oracao_extra| %>
+              <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="font-bold text-gray-800 dark:text-gray-200"><%= oracao_extra['titulo'] %></h4>
+                <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(oracao_extra['texto']) %></div>
+              </div>
+            <% end %>
           </div>
-
-          <div>
-            <h4 class="font-bold text-gray-800 dark:text-gray-200">Oração sobre as Oferendas</h4>
-            <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy['oracoes']['oferendas']) %></div>
-          </div>
-
-          <div>
-            <h4 class="font-bold text-gray-800 dark:text-gray-200">Oração depois da Comunhão</h4>
-            <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy['oracoes']['comunhao']) %></div>
-          </div>
-        </div>
-      <% end %>
-
+        <% end %>
+      </div>
     <% else %>
-      <%# Fallback caso API falhe %>
       <div class="text-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700">
         <p class="text-xl text-red-600 dark:text-red-500"><%= flash[:alert] || "Liturgia não encontrada para a data selecionada." %></p>
       </div>
     <% end %>
 
-    <%# Estilo para as cores litúrgicas %>
     <style>
       .cor-branco { background-color: #FFFFFF; }
       .cor-vermelho { background-color: #D32F2F; }
@@ -107,6 +106,5 @@
       .cor-roxo { background-color: #7B1FA2; }
       .cor-rosa { background-color: #E91E63; }
     </style>
-
   </div>
 </div>
