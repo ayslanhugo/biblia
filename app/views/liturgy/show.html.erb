@@ -1,20 +1,27 @@
+<%# app/views/liturgy/show.html.erb %>
+
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
   <div class="max-w-4xl mx-auto px-4 py-10">
 
     <h1 class="text-4xl font-serif text-center text-gray-800 dark:text-gray-100 mb-8">Liturgia Diária</h1>
 
-    <%# Formulário de seleção de data (sem alterações) %>
     <div class="mb-10 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 text-center">
       <%= form_with(url: liturgia_path, method: :get) do |form| %>
-        <label for="date" class="font-semibold text-gray-700 dark:text-gray-300 mr-2">Ver liturgia de outra data:</label>
-        <div class="relative inline-block">
-          <%= text_field_tag :date, params[:date],
-                class: "p-2 border rounded-md cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 pl-10",
-                data: { controller: "datepicker" },
-                autocomplete: "off" %>
-          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </span>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+          
+          <%# O label agora não tem margem à direita e tem uma margem inferior em mobile %>
+          <label for="date" class="font-semibold text-gray-700 dark:text-gray-300 mb-2 sm:mb-0">Ver liturgia de outra data:</label>
+          
+          <div class="relative w-50 sm:w-auto">
+            <%= text_field_tag :date, params[:date],
+                  class: "p-2 border rounded-md cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 pl-10 w-full",
+                  data: { controller: "datepicker" },
+                  autocomplete: "off" %>
+            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </span>
+          </div>
         </div>
       <% end %>
     </div>
@@ -32,8 +39,7 @@
           </div>
         </div>
 
-        <%# --- LÓGICA ATUALIZADA PARA A ESTRUTURA DA V2 --- %>
-        <%# Mapeia as chaves da API para os títulos que queremos mostrar %>
+        <%# Lógica para as leituras da V2 %>
         <%
           secoes_leituras = {
             "primeiraLeitura" => "Primeira Leitura",
@@ -83,7 +89,6 @@
               <div class="font-serif text-gray-700 dark:text-gray-300 leading-relaxed"><%= simple_format(@liturgy.dig('oracoes', 'comunhao')) %></div>
             </div>
             
-            <%# Orações Extras %>
             <% @liturgy.dig('oracoes', 'extras')&.each do |oracao_extra| %>
               <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="font-bold text-gray-800 dark:text-gray-200"><%= oracao_extra['titulo'] %></h4>
